@@ -208,6 +208,95 @@ public: Stack(){}
 	}   
 }; 
 
+class Queue
+{
+    int *arr;       // array to store queue elements
+    int capacity;   // maximum capacity of the queue
+    int front;      // front points to the front element in the queue (if any)
+    int rear;       // rear points to the last element in the queue
+    int count;      // current size of the queue
+ 
+public:
+    Queue(int size = SIZE);     // constructor
+    ~Queue();                   // destructor 
+// Constructor to initialize a queue
+Queue(int size)
+{
+    arr = new int[size];
+    capacity = size;
+    front = 0;
+    rear = -1;
+    count = 0;
+}
+ 
+// Destructor to free memory allocated to the queue
+~Queue() {
+    delete[] arr;
+}
+	
+bool isEmpty() {
+    return (size() == 0);
+}
+ 
+// Utility function to check if the queue is full or not
+bool isFull() {
+    return (size() == capacity);
+}
+ 
+// Utility function to dequeue the front element
+int dequeue()
+{
+    // check for queue underflow
+    if (isEmpty())
+    {
+        cout << "Underflow\nProgram Terminated\n";
+        exit(EXIT_FAILURE);
+    }
+ 
+    int x = arr[front];
+    cout << "Removing " << x << endl;
+ 
+    front = (front + 1) % capacity;
+    count--;
+ 
+    return x;
+}
+ 
+// Utility function to add an item to the queue
+void enqueue(int item)
+{
+    // check for queue overflow
+    if (isFull())
+    {
+        cout << "Overflow\nProgram Terminated\n";
+        exit(EXIT_FAILURE);
+    }
+ 
+    cout << "Inserting " << item << endl;
+ 
+    rear = (rear + 1) % capacity;
+    arr[rear] = item;
+    count++;
+}
+ 
+// Utility function to return the front element of the queue
+int peek()
+{
+    if (isEmpty())
+    {
+        cout << "Underflow\nProgram Terminated\n";
+        exit(EXIT_FAILURE);
+    }
+    return arr[front];
+}
+ 
+// Utility function to return the size of the queue
+int size() {
+    return count;
+}
+
+};
+
 int main(){
 linkedList linkedlist;
 Stack stack; 
