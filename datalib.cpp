@@ -1,83 +1,59 @@
 #include<iostream>
-#include<any>
 
 using namespace std;
 
-class PrintAny{
-public: PrintAny(){}
-
-void printAny(any item){
-	if(auto p =any_cast<int>(&item)){
-		cout<<*p<<" ";
-	}
-	else if(auto p =any_cast<float>(&item)){
-	  		cout<<*p<<" ";
-	  	}
-	else if(auto p =any_cast<bool>(&item)){
-	  		cout<<*p<<" ";
-	  		}
-	else if(auto p =any_cast<std::string>(&item)){
-	    	cout<<*p<<" ";
-	    		}
-   else{
-   	cout<<"Object is at ";
-   }               	
-	  	    
-} 
-	
-};
+template <typename T>
 class Node{
-	public: any value;
-	public: Node *next;
-	public: Node *previous;
+	public: T value;
+	public: Node<T> *next;
+	public: Node<T> *previous;
 
-	Node(any value){
+	Node(T value){
 		this->value = value;
 	}
 
 	
 };
 
+template <typename T> 
 class linkedList{
 private: 
 	int size;
-	Node *head = NULL;
-	Node *tail = NULL;
-	Node *itr = NULL;
-	PrintAny *printer = new PrintAny();
-
+	Node<T> *head = NULL;
+	Node<T> *tail = NULL;
+	Node<T> *itr = NULL;
+	
 	public:
 		 linkedList(){
 		 	this->size=0;
-		 	this->printer = printer;
 		 }
 
-	void append(any value){
+	void append(T value){
 		if(this-> head ==NULL ){
-			this->head = new Node(value);
+			this->head = new Node<T>(value);
 			this->tail = this-> head;
 			}
 		else{
- 			this->tail->next = new Node(value);
+ 			this->tail->next = new Node<T>(value);
 			this->tail->next->previous = this->tail;
 			this->tail = this->tail->next; 
 		}  
 		this->size +=1;
 	}
 
-	void prepend(any value){
+	void prepend(T value){
 		if(this->head == NULL){
-			this->head = new Node(value);
+			this->head = new Node<T>(value);
 			this->tail = this->head;
 		}
 		else{
-			this->head->previous = new Node(value);
+			this->head->previous = new Node<T>(value);
 			this->head->previous->next = this->head;
 			this->head = this->head->previous;
 		}
 		this->size+=1;
 		}
-	Node * iterate(){
+	Node<T> * iterate(){
 		if(this-> itr == NULL){
 			this-> itr = this->head;
 		}
@@ -87,7 +63,7 @@ private:
 		return this->itr;
 		 
 	}
-	Node * iterateReverse(){
+	Node<T> * iterateReverse(){
 		if(this->itr ==NULL){
 			this->itr=this->tail;
 		}
@@ -98,11 +74,17 @@ private:
 	}
 	void resetIterator(){
 		this->tail=NULL;
-	} 
-	any get(){
+	}
+	int Size(){
+		return this->size;
+	}  
+	T get(){
+		if(this->itr == NULL){
+			this->itr = this->head;  
+		}
 		return this->itr->value;
 	}
-	any getAtIndex(int index){
+	T getAtIndex(int index){
 		for(int i =0; i<index;i++){
 			this->iterate();
 		}
@@ -110,15 +92,15 @@ private:
 		return this->itr->value; 
 	}
 	void printGet(){
-		this->printer->printAny(this->get()); 
+		cout<<this->get(); 
 	}
 	void printerGetAtIndex(int index){
-		this->printer->printAny(this->getAtIndex(index));   
+		cout<<this->getAtIndex(index);   
 	}     
-	void set(any value){
+	void set(T value){
 		this->itr->value = value; 
 	}
-	void setAtIndex(any value, int index){
+	void setAtIndex(T value, int index){
 		for(int i=0; i<index; i++){
 			this->iterate();
 		}
@@ -127,13 +109,13 @@ private:
 	}
 	void display(){
 		while(this->iterate()!=NULL){
-		this->printer->printAny(this->get());
+		cout<<this->get();
 		}  
 	}
 	void reverseDisplay(){
 		for(int i=0; i<this->size; i++){
 			this->iterateReverse();
-			this->printer->printAny(this->get());
+			cout<<this->get();
 		}  
 	}
 	void popH(){
@@ -156,31 +138,44 @@ private:
 	}   
 	     
 };
+template <typename T> 
 class Pile{
-public:	any value;
+public:	T value;
 public: Pile *next;
-public: Pile(any value){
+public: Pile(T value){
 	this->value = value;
 } 	
 	
-}; 
+};
+template <typename T>  
 class Stack{
-	Pile *top;
-	Pile *itr;
+	Pile<T> *top;
+	Pile<T> *itr;
 	int size;
-	PrintAny *printer = new PrintAny();  
-public: Stack(){} 
+	  
+public: Stack(){
+	this->size =0;
+} 
 
-	void push(any value){
+	void push(T value){
 		if(this-> top==NULL ){
-			this->top = new Pile(value);
+			this->top = new Pile<T>(value);
 			}
 		else{
- 			this->top->next = new Pile(value);
+ 			this->top->next = new Pile<T>(value);
 		}  
 		this->size +=1;
 	}
-	Pile * iterate(){
+	void pop(T value){
+		if(this->itr==NULL){
+			this->itr= this->top;
+			delete this->itr;
+		}
+		else{
+			delete this->itr;
+		}  
+	}  
+	Pile<T> * iterate(){
 	if(this-> itr == NULL){
 		this-> itr = this->top;
 	}
@@ -189,7 +184,10 @@ public: Stack(){}
 		} 
 		return this->itr;
 	}
-	any get(){
+    int Size(){
+		return this->size; 
+	} 
+	T get(){
 	 if(this->itr==NULL){
 	 	this->itr=this->top;
 	 	return this->itr->value;
@@ -198,112 +196,174 @@ public: Stack(){}
 	 return this->itr->value;
 	 }	
 	}
-	void set(any value){
+	void set(T value){
 		this->itr->value = value; 
 	}  
 	void display(){
 		while(this->iterate()!=NULL){
-		this->printer->printAny(this->get());   
+		cout<<this->get();   
 		}  
 	}   
 }; 
+template<typename T>
+class Queue{
+T *arr;
+int capacity;
+T front;
+T rear;
+int count;
 
-class Queue
-{
-    int *arr;       // array to store queue elements
-    int capacity;   // maximum capacity of the queue
-    int front;      // front points to the front element in the queue (if any)
-    int rear;       // rear points to the last element in the queue
-    int count;      // current size of the queue
- 
-public:
-    Queue(int size = SIZE);     // constructor
-    ~Queue();                   // destructor 
-// Constructor to initialize a queue
-Queue(int size)
-{
-    arr = new int[size];
-    capacity = size;
-    front = 0;
-    rear = -1;
-    count = 0;
+public: 
+Queue(int capacity){
+	this->arr = new T[capacity];
+	this->capacity = capacity;
+	this->front =0;
+	this->rear =-1;
+	this->count =0; 
 }
- 
-// Destructor to free memory allocated to the queue
-~Queue() {
-    delete[] arr;
+~Queue(){
+	delete[] arr;
+} 
+int size(){
+	return this->count; 
+} 
+bool isEmpty(){
+	return (this->size() == 0); 
 }
-	
-bool isEmpty() {
-    return (size() == 0);
+bool isFull(){
+	return (this->size() == capacity);
 }
- 
-// Utility function to check if the queue is full or not
-bool isFull() {
-    return (size() == capacity);
-}
- 
-// Utility function to dequeue the front element
-int dequeue()
-{
-    // check for queue underflow
-    if (isEmpty())
-    {
-        cout << "Underflow\nProgram Terminated\n";
-        exit(EXIT_FAILURE);
-    }
- 
-    int x = arr[front];
-    cout << "Removing " << x << endl;
- 
-    front = (front + 1) % capacity;
-    count--;
- 
-    return x;
-}
- 
-// Utility function to add an item to the queue
-void enqueue(int item)
-{
-    // check for queue overflow
-    if (isFull())
-    {
-        cout << "Overflow\nProgram Terminated\n";
-        exit(EXIT_FAILURE);
-    }
- 
-    cout << "Inserting " << item << endl;
- 
-    rear = (rear + 1) % capacity;
-    arr[rear] = item;
-    count++;
-}
- 
-// Utility function to return the front element of the queue
-int peek()
-{
-    if (isEmpty())
-    {
-        cout << "Underflow\nProgram Terminated\n";
-        exit(EXIT_FAILURE);
-    }
-    return arr[front];
-}
- 
-// Utility function to return the size of the queue
-int size() {
-    return count;
-}
+void enqueue(T item){
+	this->rear = (this->rear+1)%capacity;
+	this->arr[rear]=item;
+	this->count++;
+} 
+void dequeue(){
+	if(this->isEmpty()){
+		cout<<"Underflow\nProgram Terminated\n";
+		exit(EXIT_FAILURE);
+	}
 
+	this->front = (this->front+1)%capacity;
+	this->count--;   
+}
+T peek(){
+	if(this->isEmpty()){
+			cout<<"Underflow\nProgram Terminated\n";
+			exit(EXIT_FAILURE);
+		}
+	return arr[front];
+}
+void display(){
+	for(int i=0; i<this->size(); i++){
+		cout<<this->peek();   
+	}
+}
+T getAtIndex(int Index){
+  return this->arr[Index]; 
+}  
 };
 
+template<typename T>
+class leaf{
+public: T value;
+public: leaf *left;
+public: leaf *right; 
+ public: 
+ 	leaf(T value){
+ 		this->value=value;
+ 	}  
+};   
+template <typename T>
+class Tree{
+int size;
+leaf<T> *root;
+leaf<T> *itr;
+leaf<T> *level; 
+public:
+	Tree(){
+		this->size = 0; 
+	}
+
+void insert(T value){
+	if(this->root==NULL){
+		this->root= new leaf<T>(value);
+	}
+	else if(this->root->right == NULL){
+		this->root->right = new leaf<T>(value);
+	}
+	else{
+		this->root->left = new leaf<T>(value);
+	}
+	this->size+=1;  
+}
+void iterate(){
+	if(this->itr==NULL){
+		this->itr=this->root;
+		this->level=this->root;
+	} 
+	leaf<T> tempR;
+	leaf<T> tempL; 
+	while(this->itr != NULL){
+		if(this->itr->right != NULL && this->level->right!= NULL){
+			this->level = this->itr;
+			this->itr = this->itr->right;
+		}
+		else if(this->level->left!=NULL){
+			this->itr = this level;
+			this->itr = this->itr->left; 
+		}  
+		else {
+			this->itr = this->level
+		}
+		   
+	}
+	  
+} 
+int search(T value){
+if(this->itr == NULL){
+	this->itr = this->root;
+}
+int depth =0;
+while(this->itr->value != NULL){
+	if(this->itr->value == value ){
+		return depth;
+	}
+	this->iterate();
+	depth++;
+}    
+}
+void sort(){
+	
+} 
+void pop(){
+	
+}
+void display(){
+	if(this->itr == NULL){
+		this->itr = this->root;
+	}  
+	while(this->itr!=NULL){
+		this->iterate();
+		cout<<this->itr->value;
+	}  
+	
+}       
+	
+}; 
+  
 int main(){
-linkedList linkedlist;
-Stack stack; 
+linkedList<int> linkedlist;
+Stack<int> stack;
+Queue<int> queue(200); 
+Tree<int> tree;
 for(int i=0; i<101; i++){
 	linkedlist.append(i);
-	stack.push(i); 
+	stack.push(i);
+	queue.enqueue(i);
+	tree.insert(i);  
 }
-stack.display();
+cout<<linkedlist.getAtIndex(20);
+tree.display();
 }     
  
