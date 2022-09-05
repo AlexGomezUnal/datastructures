@@ -289,11 +289,11 @@ void insert(T value){
 	if(this->root==NULL){
 		this->root= new leaf<T>(value);
 	}
+	else if(this->root->left == NULL){
+		this->root->left = new leaf<T>(value);
+	}
 	else if(this->root->right == NULL){
 		this->root->right = new leaf<T>(value);
-	}
-	else{
-		this->root->left = new leaf<T>(value);
 	}
 	this->size+=1;  
 }
@@ -302,19 +302,17 @@ void iterate(){
 		this->itr=this->root;
 		this->level=this->root;
 	} 
-	leaf<T> tempR;
-	leaf<T> tempL; 
 	while(this->itr != NULL){
 		if(this->itr->right != NULL && this->level->right!= NULL){
 			this->level = this->itr;
 			this->itr = this->itr->right;
 		}
 		else if(this->level->left!=NULL){
-			this->itr = this level;
+			this->itr = this->level;
 			this->itr = this->itr->left; 
 		}  
 		else {
-			this->itr = this->level
+			this->itr = this->level;
 		}
 		   
 	}
@@ -364,6 +362,5 @@ for(int i=0; i<101; i++){
 	tree.insert(i);  
 }
 cout<<linkedlist.getAtIndex(20);
-tree.display();
 }     
  
