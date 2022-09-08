@@ -123,11 +123,11 @@ private:
 	}
 	void popT(){
 	this->iterateReverse();
-	delete this->itr;
+	delete this->itr->value;
 	this->size-=1;
 	}
 	void remove(){
-	delete this->itr;
+	delete this->itr->value;
 	this->size-=1;	
 	}
 	void popAtIndex(int index){
@@ -169,10 +169,10 @@ public: Stack(){
 	void pop(T value){
 		if(this->itr==NULL){
 			this->itr= this->top;
-			delete this->itr;
+			delete this->itr->value;
 		}
 		else{
-			delete this->itr;
+			delete this->itr->value;
 		}  
 	}  
 	Pile<T> * iterate(){
@@ -239,12 +239,7 @@ void enqueue(T item){
 	this->count++;
 } 
 void dequeue(){
-	if(this->isEmpty()){
-		cout<<"Underflow\nProgram Terminated\n";
-		exit(EXIT_FAILURE);
-	}
-
-	this->front = (this->front+1)%capacity;
+	delete this->array[front];
 	this->count--;   
 }
 T peek(){
@@ -254,9 +249,12 @@ T peek(){
 		}
 	return arr[front];
 }
+T get(){
+	return this->array[front];
+}
 void display(){
 	for(int i=0; i<this->size(); i++){
-		cout<<this->peek();   
+		cout<<this->array[i];   
 	}
 }
 T getAtIndex(int Index){
