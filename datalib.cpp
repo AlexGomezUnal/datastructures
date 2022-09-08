@@ -278,52 +278,50 @@ template <typename T>
 class Tree{
 int size;
 leaf<T> *root;
-leaf<T> *itr;
-leaf<T> *level; 
+Pile<T> *itr;
+T *array;
+int count;
+int countItr;
 public:
 	Tree(){
 		this->size = 0; 
+		this->array = new T[9999999];
+		this->count = 0;
+		this->countItr = 0;
 	}
 
 void insert(T value){
 	if(this->root==NULL){
 		this->root= new leaf<T>(value);
+		this->itr = this->root;
 	}
-	else if(this->root->left == NULL){
+	if(this->root->left == NULL){
 		this->root->left = new leaf<T>(value);
+		this->array[count] = this->root->left;
+		this->count++;
 	}
-	else if(this->root->right == NULL){
+	if(this->root->right == NULL){
 		this->root->right = new leaf<T>(value);
+		this->array[count] = this->root->right;
+		this->count++;
 	}
+	this->root = this->array[this->count--]; 
 	this->size+=1;  
 }
 void iterate(){
-	if(this->itr==NULL){
-		this->itr=this->root;
-		this->level=this->root;
-	} 
-	while(this->itr != NULL){
-		if(this->itr->right != NULL && this->level->right!= NULL){
-			this->level = this->itr;
-			this->itr = this->itr->right;
-		}
-		else if(this->level->left!=NULL){
-			this->itr = this->level;
-			this->itr = this->itr->left; 
-		}  
-		else {
-			this->itr = this->level;
-		}
-		   
-	}
-	  
+	this->itr->next = this->itr;
+	this->itr= this->array[this->countItr];
+	this->countItr++;
 } 
-int search(T value){
-if(this->itr == NULL){
-	this->itr = this->root;
+void resetIterate(){
+	this->itr = this->itr->next;
+	this->countItr = 0; 
+
 }
+	
+int search(T value){
 int depth =0;
-while(this->itr->value != NULL){
+while(this->itr != NULL){
 	if(this->itr->value == value ){
 		return depth;
 	}
@@ -338,9 +336,9 @@ void pop(){
 	
 }
 void display(){
-	if(this->itr == NULL){
-		this->itr = this->root;
-	}  
+	do{
+		cout<<this->itr->next;
+	}
 	while(this->itr!=NULL){
 		this->iterate();
 		cout<<this->itr->value;
@@ -361,6 +359,5 @@ for(int i=0; i<101; i++){
 	queue.enqueue(i);
 	tree.insert(i);  
 }
-cout<<linkedlist.getAtIndex(20);
 }     
  
