@@ -1,5 +1,6 @@
 #include<iostream>
-
+#include <string>
+#include <tuple>
 using namespace std;
 
 template <typename T>
@@ -123,11 +124,11 @@ private:
 	}
 	void popT(){
 	this->iterateReverse();
-	delete this->itr->value;
+	delete this->itr;
 	this->size-=1;
 	}
 	void remove(){
-	delete this->itr->value;
+	delete this->itr;
 	this->size-=1;	
 	}
 	void popAtIndex(int index){
@@ -169,10 +170,10 @@ public: Stack(){
 	void pop(T value){
 		if(this->itr==NULL){
 			this->itr= this->top;
-			delete this->itr->value;
+			delete this->itr;
 		}
 		else{
-			delete this->itr->value;
+			delete this->itr;
 		}  
 	}  
 	Pile<T> * iterate(){
@@ -217,7 +218,6 @@ public:
 Queue(int capacity){
 	this->arr = new T[capacity];
 	this->capacity = capacity;
-	this->front =0;
 	this->rear =-1;
 	this->count =0; 
 }
@@ -234,32 +234,27 @@ bool isFull(){
 	return (this->size() == capacity);
 }
 void enqueue(T item){
-	this->rear = (this->rear+1)%capacity;
-	this->arr[rear]=item;
-	this->count++;
+	count++;
+	this->arr[rear+count]=item;
 } 
 void dequeue(){
-	delete this->array[front];
-	this->count--;   
+	this->count--;
+	delete this->arr[0];    
 }
 T peek(){
-	if(this->isEmpty()){
-			cout<<"Underflow\nProgram Terminated\n";
-			exit(EXIT_FAILURE);
-		}
-	return arr[front];
+	return arr[0];
 }
-T get(){
-	return this->array[front];
-}
+T Rear(){
+	return arr[count]; 
+} 
+T get(int index){
+	return arr[index]; 
+} 
 void display(){
 	for(int i=0; i<this->size(); i++){
-		cout<<this->array[i];   
+		cout<<this->get(i);   
 	}
 }
-T getAtIndex(int Index){
-  return this->arr[Index]; 
-}  
 };
 
 template<typename T>
@@ -276,50 +271,50 @@ template <typename T>
 class Tree{
 int size;
 leaf<T> *root;
-Pile<T> *itr;
-T *array;
+leaf<T> *itr;
+Queue<leaf<T>> treeQueue(999999); 
 int count;
 int countItr;
 public:
 	Tree(){
 		this->size = 0; 
-		this->array = new T[9999999];
 		this->count = 0;
 		this->countItr = 0;
 	}
 
 void insert(T value){
-	if(this->root==NULL){
-		this->root= new leaf<T>(value);
-		this->itr = this->root;
-	}
-	if(this->root->left == NULL){
-		this->root->left = new leaf<T>(value);
-		this->array[count] = this->root->left;
-		this->count++;
-	}
-	if(this->root->right == NULL){
-		this->root->right = new leaf<T>(value);
-		this->array[count] = this->root->right;
-		this->count++;
-	}
-	this->root = this->array[this->count--]; 
-	this->size+=1;  
+if(this->root ==NULL){
+	this->root = new leaf<T>(value);
+	this->itr = this->root;
 }
-void iterate(){
-	this->itr->next = this->itr;
-	this->itr= this->array[this->countItr];
-	this->countItr++;
-} 
-void resetIterate(){
-	this->itr = this->itr->next;
-	this->countItr = 0; 
+if(this->root->left == NULL){
+	this->root->left = new leaf<T>(value);
+	this->treeQueue->enqueue(this->root->left);
+	this->count++;
+}
+if(this->root->right == NULL){
+ 	this->root->right = new leaf<T>(value);
+ 	this->treeQueue->enqueue(this->root->right);  	
+	this->count++;	
+}
+this->root = this->treeQueue->get(this->count--);
+this->size+=1;  
+	
 
 }
-	
+void iterate(){
+ this->itr->right = this->itr;
+ this->itr = this->array[this->countItr];
+ this->countItr++;
+		   	  
+}
+void resetIterate(){
+	this->itr = this->itr->right;
+	this->countItr = 0;
+}  
 int search(T value){
 int depth =0;
-while(this->itr != NULL){
+while(this->itr->value != NULL){
 	if(this->itr->value == value ){
 		return depth;
 	}
@@ -334,9 +329,7 @@ void pop(){
 	
 }
 void display(){
-	do{
-		cout<<this->itr->next;
-	}
+	cout<<this->itr->next->value;  
 	while(this->itr!=NULL){
 		this->iterate();
 		cout<<this->itr->value;
@@ -345,17 +338,58 @@ void display(){
 }       
 	
 }; 
-  
+template <typename I, typename K>
+class Hash{
+tuple<I,K> *table;
+int capacity;
+int count;
+
+public: Hash(int capacity){
+	this->table = new tuple<I,K>[capacity]; 
+	this->count =0;
+}
+void  add(tuple<I,K> item){
+	this->table[count] = item;
+	count++;
+}
+void pop(){
+	delete this->table[count]; 
+	count--;
+} 
+void FHash(){
+	
+}
+I search(K key){
+	
+}
+void set(){
+	
+}  
+void display(){
+/*for(int i=0; i<capacity; i++){
+	cout<<this->table[i]<0>;
+	cout<<this->table[i]<1>;
+	 
+}*/	
+}     	
+};   
 int main(){
 linkedList<int> linkedlist;
 Stack<int> stack;
 Queue<int> queue(200); 
 Tree<int> tree;
+Hash<int,string> hash(200);
+
+tuple<int,string> x; 
 for(int i=0; i<101; i++){
 	linkedlist.append(i);
 	stack.push(i);
 	queue.enqueue(i);
-	tree.insert(i);  
+	tree.insert(i);
+	make_tuple(x,i,to_string(i));
+	hash.add(x);   
 }
+queue.display();
+hash.display();
 }     
  
