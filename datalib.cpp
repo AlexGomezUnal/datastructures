@@ -210,16 +210,12 @@ template<typename T>
 class Queue{
 T *arr;
 int capacity;
-T front;
-T rear;
 int count;
 
 public: 
 Queue(int capacity){
 	this->arr = new T[capacity];
-	this->capacity = capacity;
-	this->rear =-1;
-	this->count =0; 
+	this->capacity = capacity; 
 }
 ~Queue(){
 	delete[] arr;
@@ -234,17 +230,28 @@ bool isFull(){
 	return (this->size() == capacity);
 }
 void enqueue(T item){
+	this->arr[count]=item;
 	count++;
-	this->arr[rear+count]=item;
+	
 } 
 void dequeue(){
-	this->count--;
-	delete this->arr[0];    
+	if(this->arr->isFull()){
+	
+	for(int i =0; i<this->count-1; i++){
+		this->arr[i] = this->arr[i+1];
+	}	
+	}
+	else{
+	for(int i =0; i<this->count; i++){
+		this->arr[i] = this->arr[i+1];
+	}
+	}
+	this->count--;  
 }
-T peek(){
+T front(){
 	return arr[0];
 }
-T Rear(){
+T rear(){
 	return arr[count]; 
 } 
 T get(int index){
